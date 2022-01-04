@@ -18,7 +18,7 @@ yarn
 1. clone repository and install packages
 
   ```sh
-  git clone https://github.dev/OmniFlix/insync.git
+  git clone https://github.com/rizon-world/insync.git
   cd insync
   yarn
   ```
@@ -31,19 +31,19 @@ yarn
 
  ```js
 export const config = {
-    RPC_URL: 'https://rpc.flixnet.omniflix.network',
-    REST_URL: 'https://rest.flixnet.omniflix.network',
-    EXPLORER_URL: 'https://explorer.omniflix.network',
-    NETWORK_NAME: 'OmniFlix',
-    NETWORK_TYPE: 'testnet',
-    CHAIN_ID: 'flixnet-3',
-    CHAIN_NAME: 'OmniFlix FlixNet-3',
-    COIN_DENOM: 'FLIX',
-    COIN_MINIMAL_DENOM: 'uflix',
+    RPC_URL: 'http://seed-1.mainnet.rizon.world:26657',
+    REST_URL: 'http://seed-1.mainnet.rizon.world:1317',
+    EXPLORER_URL: 'https://www.mintscan.io/rizon',
+    NETWORK_NAME: 'RIZON',
+    NETWORK_TYPE: 'mainnet',
+    CHAIN_ID: 'titan-1',
+    CHAIN_NAME: 'RIZON',
+    COIN_DENOM: 'ATOLO',
+    COIN_MINIMAL_DENOM: 'uatolo',
     COIN_DECIMALS: 6,
-    PREFIX: 'omniflix',
+    PREFIX: 'rizon',
     COIN_TYPE: 118,
-    COINGECKO_ID: '-',
+    COINGECKO_ID: 'rizon',
     DEFAULT_GAS: 200000,
     GAS_PRICE_STEP_LOW: 0.0025,
     GAS_PRICE_STEP_AVERAGE: 0.025,
