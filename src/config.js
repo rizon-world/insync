@@ -1,6 +1,6 @@
 export const config = {
-    RPC_URL: 'http://seed-1.mainnet.rizon.world:26657', // TBD
-    REST_URL: 'http://seed-1.mainnet.rizon.world:1317', // TBD
+    RPC_URL: 'http://localhost:26657',
+    REST_URL: 'http://localhost:1317',
     EXPLORER_URL: 'https://www.mintscan.io/rizon',
     NETWORK_NAME: 'RIZON',
     NETWORK_TYPE: 'mainnet',
