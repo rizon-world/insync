@@ -23,8 +23,8 @@ class Table extends Component {
             selectableRows: 'none',
             selectToolbarPlacement: 'none',
             sortOrder: {
-                name: 'validator',
-                direction: 'asc',
+                name: 'voting_power',
+                direction: 'desc',
             },
             textLabels: {
                 body: {
