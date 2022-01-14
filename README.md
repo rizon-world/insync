@@ -1,3 +1,7 @@
+# RIZON - OmniFlix
+- You can use omniflix for rizon blockchain. 
+- Live : [OmniFlix for RIZON Blockchain](http://omniflix.rizon.world/)
+
 inSync by OmniFlix (for Communities)
 ===
 
