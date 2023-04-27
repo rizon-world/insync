@@ -1,6 +1,6 @@
 export const config = {
-    RPC_URL: 'http://localhost:26657',
-    REST_URL: 'http://localhost:1317',
+    RPC_URL: 'https://rpcapi.rizon.world/',
+    REST_URL: 'https://restapi.rizon.world/',
     EXPLORER_URL: 'https://www.mintscan.io/rizon',
     NETWORK_NAME: 'RIZON',
     NETWORK_TYPE: 'mainnet',
