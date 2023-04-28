@@ -3,20 +3,20 @@ import { config } from '../config';
 export const REST_URL = config.REST_URL;
 export const RPC_URL = config.RPC_URL;
 
-export const urlFetchDelegations = (address) => `${REST_URL}/staking/delegators/${address}/delegations`;
-export const urlFetchBalance = (address) => `${REST_URL}/bank/balances/${address}`;
-export const urlFetchVestingBalance = (address) => `${REST_URL}/auth/accounts/${address}`;
-export const urlFetchUnBondingDelegations = (address) => `${REST_URL}/staking/delegators/${address}/unbonding_delegations`;
+export const urlFetchDelegations = (rest, address) => `${rest}/staking/delegators/${address}/delegations`;
+export const urlFetchBalance = (rest, address) => `${rest}/bank/balances/${address}`;
+export const urlFetchVestingBalance = (rest, address) => `${rest}/auth/accounts/${address}`;
+export const urlFetchUnBondingDelegations = (rest, address) => `${rest}/staking/delegators/${address}/unbonding_delegations`;
 
-export const urlFetchRewards = (address) => `${REST_URL}/distribution/delegators/${address}/rewards`;
-export const urlFetchVoteDetails = (proposalId, address) => `${REST_URL}/gov/proposals/${proposalId}/votes/${address}`;
+export const urlFetchRewards = (rest, address) => `${rest}/distribution/delegators/${address}/rewards`;
+export const urlFetchVoteDetails = (rest, proposalId, address) => `${rest}/gov/proposals/${proposalId}/votes/${address}`;
 
-export const VALIDATORS_LIST_URL = `${REST_URL}/staking/validators`;
-export const getValidatorURL = (address) => `${REST_URL}/staking/validators/${address}`;
-export const PROPOSALS_LIST_URL = `${REST_URL}/gov/proposals`;
-export const getDelegatedValidatorsURL = (address) => `${REST_URL}/staking/delegators/${address}/validators`;
-export const urlFetchProposalVotes = (id) => `${REST_URL}/gov/proposals/${id}/votes`;
-export const urlFetchTallyDetails = (id) => `${REST_URL}/gov/proposals/${id}/tally`;
-export const urlFetchProposalDetails = (id) => `${REST_URL}/txs?message.module=governance&submit_proposal.proposal_id=${id}`;
+export const VALIDATORS_LIST_URL = (rest) => `${rest}/staking/validators`;
+export const getValidatorURL = (rest, address) => `${rest}/staking/validators/${address}`;
+export const PROPOSALS_LIST_URL = (rest) => `${rest}/gov/proposals`;
+export const getDelegatedValidatorsURL = (rest, address) => `${rest}/staking/delegators/${address}/validators`;
+export const urlFetchProposalVotes = (rest, id) => `${rest}/gov/proposals/${id}/votes`;
+export const urlFetchTallyDetails = (rest, id) => `${rest}/gov/proposals/${id}/tally`;
+export const urlFetchProposalDetails = (rest, id) => `${rest}/txs?message.module=governance&submit_proposal.proposal_id=${id}`;
 
 export const validatorImageURL = (id) => `https://keybase.io/_/api/1.0/user/lookup.json?fields=pictures&key_suffix=${id}`;

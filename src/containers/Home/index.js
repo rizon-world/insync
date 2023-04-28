@@ -69,9 +69,11 @@ class Home extends Component {
         const { active } = this.state;
         const filteredProposals = this.props.proposals && this.props.proposals.filter((item) => item.status === 2);
 
+        const { network, changeNetwork } = this.props;
+
         return (
             <>
-                <NavBar/>
+                <NavBar changeNetwork={changeNetwork} network={network} />
                 <div className="home padding">
                     <div className="card">
                         <div className="left_content">
@@ -97,7 +99,7 @@ class Home extends Component {
                                 {variables[this.props.lang]['view_all']}
                             </Button>
                         </div>
-                        <Table active={active} home={true}/>
+                        <Table active={active} home={true} />
                     </div>
                 </div>
                 <div className="proposals">
@@ -119,23 +121,25 @@ class Home extends Component {
                                     ? <Cards home={true} proposals={filteredProposals}/>
                                     : <div className="cards_content">{variables[this.props.lang]['no_data_found']}</div>}
                         </div>
-                        : <ProposalDialog/>}
+                        : <ProposalDialog network={network} />}
                 </div>
-                <DelegateDialog/>
-                <SuccessDialog/>
-                <UnSuccessDialog/>
-                <PendingDialog/>
-                <ClaimDialog/>
+                <DelegateDialog network={network} />
+                <SuccessDialog network={network} />
+                <UnSuccessDialog network={network} />
+                <PendingDialog network={network} />
+                <ClaimDialog network={network} />
             </>
         );
     }
 }
 
 Home.propTypes = {
+    changeNetwork: PropTypes.func.isRequired,
     history: PropTypes.shape({
         push: PropTypes.func.isRequired,
     }).isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     proposals: PropTypes.array.isRequired,
     voteDetailsInProgress: PropTypes.bool.isRequired,

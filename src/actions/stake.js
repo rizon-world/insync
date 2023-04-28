@@ -50,9 +50,10 @@ const fetchValidatorsError = (message) => {
     };
 };
 
-export const getValidators = (cb) => (dispatch) => {
+export const getValidators = (url, cb) => (dispatch) => {
     dispatch(fetchValidatorsInProgress());
-    Axios.get(VALIDATORS_LIST_URL, {
+    console.log('url: ', url);
+    Axios.get(VALIDATORS_LIST_URL(url), {
         headers: {
             Accept: 'application/json, text/plain, */*',
             // Connection: 'keep-alive',
@@ -218,9 +219,9 @@ const fetchDelegatedValidatorsError = (message) => {
     };
 };
 
-export const getDelegatedValidatorsDetails = (address) => (dispatch) => {
+export const getDelegatedValidatorsDetails = (_url, address) => (dispatch) => {
     dispatch(fetchDelegatedValidatorsInProgress());
-    const URL = getDelegatedValidatorsURL(address);
+    const URL = getDelegatedValidatorsURL(_url, address);
     Axios.get(URL, {
         headers: {
             Accept: 'application/json, text/plain, */*',

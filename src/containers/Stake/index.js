@@ -21,9 +21,11 @@ const Stake = (props) => {
         setActive(value);
     };
 
+    const { changeNetwork, network } = props;
+
     return (
         <div className="stake">
-            <NavBar stake={true}/>
+            <NavBar changeNetwork={changeNetwork} network={network} stake={true}/>
             <div className="stake_content padding">
                 <div className="heading">
                     <div className="tabs">
@@ -38,7 +40,7 @@ const Stake = (props) => {
                 </div>
                 <Table active={active}/>
             </div>
-            <DelegateDialog/>
+            <DelegateDialog changeNetwork={changeNetwork} network={network} />
             <SuccessDialog/>
             <UnSuccessDialog/>
             <PendingDialog/>
@@ -47,7 +49,9 @@ const Stake = (props) => {
 };
 
 Stake.propTypes = {
+    changeNetwork: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
 };
 
 const stateToProps = (state) => {

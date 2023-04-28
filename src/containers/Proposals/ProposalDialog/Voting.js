@@ -19,6 +19,8 @@ const Voting = (props) => {
     const [value, setValue] = React.useState('');
     const [inProgress, setInProgress] = React.useState(false);
 
+    const { REST_URL } = props.network;
+
     const handleChange = (event) => {
         setValue(event.target.value);
     };
@@ -74,8 +76,8 @@ const Voting = (props) => {
             }
             if (result) {
                 props.successDialog(result.transactionHash);
-                props.fetchVoteDetails(props.proposalId, props.address);
-                props.fetchProposalTally(props.proposalId);
+                props.fetchVoteDetails(REST_URL, props.proposalId, props.address);
+                props.fetchProposalTally(REST_URL, props.proposalId);
                 props.getBalance(props.address);
                 props.fetchVestingBalance(props.address);
             }
@@ -130,6 +132,7 @@ Voting.propTypes = {
     getBalance: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     pendingDialog: PropTypes.func.isRequired,
     showMessage: PropTypes.func.isRequired,
     successDialog: PropTypes.func.isRequired,

@@ -1,4 +1,4 @@
-import { AppBar, Tab } from '@material-ui/core';
+import { AppBar, FormControl, InputLabel, MenuItem, Select, Tab, ThemeProvider, createMuiTheme } from '@material-ui/core';
 import * as PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -7,10 +7,20 @@ import { withRouter } from 'react-router';
 import { hideSideBar } from '../../actions/navBar';
 import { hideProposalDialog } from '../../actions/proposals';
 
+const theme = createMuiTheme({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: '#white',
+        },
+    },
+});
+
 class Tabs extends Component {
     constructor (props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handleNetworkName = this.handleNetworkName.bind(this);
         this.state = {
             value: '',
         };
@@ -54,6 +64,12 @@ class Tabs extends Component {
         });
     }
 
+    handleNetworkName (newValue) {
+        if (this.props.network !== newValue) {
+            this.props.changeNetwork();
+        }
+    }
+
     render () {
         const a11yProps = (index) => {
             return {
@@ -65,6 +81,22 @@ class Tabs extends Component {
         return (
             <AppBar className="horizontal_tabs" position="static">
                 <div className="tabs_content">
+                    <ThemeProvider theme={theme}>
+                        <FormControl >
+                            <InputLabel id="demo-simple-select-label" style={{ color: 'whitesmoke' }}>Network</InputLabel>
+                            <Select
+                                id="demo-simple-select"
+                                label="Age"
+                                labelId="demo-simple-select-label"
+                                style={{ color: 'whitesmoke' }}
+                                value={this.props.network}
+                                onChange={this.handleNetworkName}
+                            >
+                                <MenuItem value={'mainnet'}>mainnet</MenuItem>
+                                <MenuItem value={'testnet'}>testnet</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </ThemeProvider>
                     <Tab
                         className={'tab ' + (this.state.value === '' ? 'active_tab' : '')}
                         label={variables[this.props.lang].dashboard}
@@ -90,6 +122,7 @@ class Tabs extends Component {
 }
 
 Tabs.propTypes = {
+    changeNetwork: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     hideProposalDialog: PropTypes.func.isRequired,
     history: PropTypes.shape({
@@ -99,6 +132,7 @@ Tabs.propTypes = {
     location: PropTypes.shape({
         pathname: PropTypes.string.isRequired,
     }).isRequired,
+    network: PropTypes.string.isRequired,
     open: PropTypes.bool.isRequired,
 };
 

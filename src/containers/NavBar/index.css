@@ -125,6 +125,10 @@ table .disconnect_button {
     color: #FFFFFF;
 }
 
+.select {
+    
+}
+
 @keyframes fadeInDown {
     0% {
         opacity: 0;

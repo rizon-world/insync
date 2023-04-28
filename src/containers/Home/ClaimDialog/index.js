@@ -21,6 +21,8 @@ import CircularProgress from '../../../components/CircularProgress';
 const ClaimDialog = (props) => {
     const [inProgress, setInProgress] = useState(false);
 
+    const { REST_URL } = props.network;
+
     const handleClaimAll = () => {
         setInProgress(true);
         const count = props.rewards && props.rewards.rewards &&
@@ -67,7 +69,7 @@ const ClaimDialog = (props) => {
             if (result) {
                 props.setTokens(tokens);
                 props.successDialog(result.transactionHash);
-                props.fetchRewards(props.address);
+                props.fetchRewards(REST_URL, props.address);
             }
         });
     };
@@ -108,11 +110,11 @@ const ClaimDialog = (props) => {
             }
 
             if (result) {
-                props.setTokens(tokens);
-                props.successDialog(result.transactionHash);
-                props.fetchRewards(props.address);
-                props.getBalance(props.address);
-                props.fetchVestingBalance(props.address);
+                props.setTokens(REST_URL, tokens);
+                props.successDialog(REST_URL, result.transactionHash);
+                props.fetchRewards(REST_URL, props.address);
+                props.getBalance(REST_URL, props.address);
+                props.fetchVestingBalance(REST_URL, props.address);
             }
         });
     };
@@ -179,6 +181,7 @@ ClaimDialog.propTypes = {
     getBalance: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     pendingDialog: PropTypes.func.isRequired,
     rewards: PropTypes.shape({

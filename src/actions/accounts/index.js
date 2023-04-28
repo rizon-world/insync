@@ -56,9 +56,9 @@ const fetchDelegationsError = (message) => {
     };
 };
 
-export const getDelegations = (address) => (dispatch) => {
+export const getDelegations = (_url, address) => (dispatch) => {
     dispatch(fetchDelegationsInProgress());
-    const url = urlFetchDelegations(address);
+    const url = urlFetchDelegations(_url, address);
     Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
@@ -99,9 +99,9 @@ const fetchBalanceError = (message) => {
     };
 };
 
-export const getBalance = (address) => (dispatch) => {
+export const getBalance = (_url, address) => (dispatch) => {
     dispatch(fetchBalanceInProgress());
-    const url = urlFetchBalance(address);
+    const url = urlFetchBalance(_url, address);
     Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
@@ -142,9 +142,9 @@ const fetchVestingBalanceError = (message) => {
     };
 };
 
-export const fetchVestingBalance = (address) => (dispatch) => {
+export const fetchVestingBalance = (_url, address) => (dispatch) => {
     dispatch(fetchVestingBalanceInProgress());
-    const url = urlFetchVestingBalance(address);
+    const url = urlFetchVestingBalance(_url, address);
     Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
@@ -197,9 +197,9 @@ const fetchUnBondingDelegationsError = (message) => {
     };
 };
 
-export const getUnBondingDelegations = (address) => (dispatch) => {
+export const getUnBondingDelegations = (_url, address) => (dispatch) => {
     dispatch(fetchUnBondingDelegationsInProgress());
-    const url = urlFetchUnBondingDelegations(address);
+    const url = urlFetchUnBondingDelegations(_url, address);
     Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
@@ -247,9 +247,9 @@ const fetchRewardsError = (message) => {
     };
 };
 
-export const fetchRewards = (address) => (dispatch) => {
+export const fetchRewards = (_url, address) => (dispatch) => {
     dispatch(fetchRewardsInProgress());
-    const url = urlFetchRewards(address);
+    const url = urlFetchRewards(_url, address);
     Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
