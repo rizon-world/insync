@@ -27,14 +27,22 @@ class ProposalDialog extends Component {
             this.props.voteDetails.filter((vote) => vote.proposal_id === this.props.proposal.id)[0];
 
         if (!votedOption && this.props.proposal && this.props.proposal.id && this.props.address) {
-            this.props.fetchVoteDetails(this.props.proposal.id, this.props.address);
+            const { REST_URL } = this.props.network;
+            this.props.fetchVoteDetails(REST_URL, this.props.proposal.id, this.props.address);
+        }
+    }
+
+    componentDidUpdate (prevProps) {
+        if (prevProps.network.NETWORK_TYPE !== this.props.network.NETWORK_TYPE) {
+            this.props.handleClose();
         }
     }
 
     handleChange () {
-        this.setState({
+        this.setState((prev) => ({
+            ...prev,
             show: !this.state.show,
-        });
+        }));
     }
 
     VoteCalculation (val) {
@@ -179,7 +187,7 @@ class ProposalDialog extends Component {
                             </div>
                         </div>
                         {this.props.proposal && this.props.proposal.status === 2 && !this.props.voteDetailsInProgress
-                            ? <Voting proposalId={this.props.proposal && this.props.proposal.id}/>
+                            ? <Voting network={this.props.network} proposalId={this.props.proposal && this.props.proposal.id}/>
                             : null}
                     </div>
                     {votedOption
@@ -203,6 +211,7 @@ class ProposalDialog extends Component {
 ProposalDialog.propTypes = {
     fetchVoteDetails: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
+    network: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     proposalDetails: PropTypes.object.isRequired,
     tallyDetails: PropTypes.object.isRequired,

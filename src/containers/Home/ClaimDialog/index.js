@@ -13,13 +13,15 @@ import '../../Stake/DelegateDialog/index.css';
 import ValidatorsSelectField from './ValidatorsSelectField';
 import { signTxAndBroadcast } from '../../../helper';
 import { showMessage } from '../../../actions/snackbar';
-import { fetchRewards, fetchVestingBalance, getBalance } from '../../../actions/accounts';
+import { fetchRewards, fetchVestingBalance, getBalance, getUnBondingDelegations, getDelegations } from '../../../actions/accounts';
 import { config } from '../../../config';
 import variables from '../../../utils/variables';
 import CircularProgress from '../../../components/CircularProgress';
 
 const ClaimDialog = (props) => {
     const [inProgress, setInProgress] = useState(false);
+
+    const { REST_URL } = props.network;
 
     const handleClaimAll = () => {
         setInProgress(true);
@@ -53,7 +55,7 @@ const ClaimDialog = (props) => {
             });
         }
 
-        signTxAndBroadcast(updatedTx, props.address, (error, result) => {
+        signTxAndBroadcast(props.network.CHAIN_ID, props.network.RPC_URL, updatedTx, props.address, (error, result) => {
             setInProgress(false);
             if (error) {
                 if (error.indexOf('not yet found on the chain') > -1) {
@@ -67,7 +69,13 @@ const ClaimDialog = (props) => {
             if (result) {
                 props.setTokens(tokens);
                 props.successDialog(result.transactionHash);
-                props.fetchRewards(props.address);
+                props.fetchRewards(REST_URL, props.address);
+
+                props.getUnBondingDelegations(REST_URL, props.address);
+                props.getDelegations(REST_URL, props.address);
+                props.getBalance(REST_URL, props.address);
+                props.fetchVestingBalance(REST_URL, props.address);
+                props.fetchRewards(REST_URL, props.address);
             }
         });
     };
@@ -95,7 +103,7 @@ const ClaimDialog = (props) => {
             memo: '',
         };
 
-        signTxAndBroadcast(updatedTx, props.address, (error, result) => {
+        signTxAndBroadcast(props.network.CHAIN_ID, props.network.RPC_URL, updatedTx, props.address, (error, result) => {
             setInProgress(false);
             if (error) {
                 if (error.indexOf('not yet found on the chain') > -1) {
@@ -108,11 +116,14 @@ const ClaimDialog = (props) => {
             }
 
             if (result) {
-                props.setTokens(tokens);
-                props.successDialog(result.transactionHash);
-                props.fetchRewards(props.address);
-                props.getBalance(props.address);
-                props.fetchVestingBalance(props.address);
+                props.setTokens(REST_URL, tokens);
+                props.successDialog(REST_URL, result.transactionHash);
+                props.fetchRewards(REST_URL, props.address);
+                props.getBalance(REST_URL, props.address);
+                props.fetchVestingBalance(REST_URL, props.address);
+
+                props.getUnBondingDelegations(REST_URL, props.address);
+                props.getDelegations(REST_URL, props.address);
             }
         });
     };
@@ -177,8 +188,11 @@ ClaimDialog.propTypes = {
     fetchRewards: PropTypes.func.isRequired,
     fetchVestingBalance: PropTypes.func.isRequired,
     getBalance: PropTypes.func.isRequired,
+    getDelegations: PropTypes.func.isRequired,
+    getUnBondingDelegations: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     pendingDialog: PropTypes.func.isRequired,
     rewards: PropTypes.shape({
@@ -212,6 +226,8 @@ const actionToProps = {
     showMessage,
     fetchRewards,
     setTokens,
+    getUnBondingDelegations,
+    getDelegations,
 };
 
 export default connect(stateToProps, actionToProps)(ClaimDialog);

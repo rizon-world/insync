@@ -22,13 +22,15 @@ import {
     getUnBondingDelegations,
 } from '../../../actions/accounts';
 import { showMessage } from '../../../actions/snackbar';
-import { config } from '../../../config';
 import CircularProgress from '../../../components/CircularProgress';
 import { connect } from 'react-redux';
 
 const COIN_DECI_VALUE = 1000000;
 const DelegateDialog = (props) => {
+    const config = props.network;
     const [inProgress, setInProgress] = useState(false);
+    const { REST_URL } = props.network;
+
     const handleDelegateType = () => {
         setInProgress(true);
         let gasValue = config.DEFAULT_GAS;
@@ -53,7 +55,8 @@ const DelegateDialog = (props) => {
             },
             memo: '',
         };
-        signTxAndBroadcast(updatedTx, props.address, (error, result) => {
+
+        signTxAndBroadcast(props.network.CHAIN_ID, props.network.RPC_URL, updatedTx, props.address, (error, result) => {
             setInProgress(false);
             if (error) {
                 if (error.indexOf('not yet found on the chain') > -1) {
@@ -72,12 +75,12 @@ const DelegateDialog = (props) => {
     };
 
     const updateBalance = () => {
-        props.getBalance(props.address);
-        props.fetchVestingBalance(props.address);
-        props.getDelegations(props.address);
-        props.getUnBondingDelegations(props.address);
-        props.getDelegatedValidatorsDetails(props.address);
-        props.fetchRewards(props.address);
+        props.getBalance(REST_URL, props.address);
+        props.fetchVestingBalance(REST_URL, props.address);
+        props.getDelegations(REST_URL, props.address);
+        props.getUnBondingDelegations(REST_URL, props.address);
+        props.getDelegatedValidatorsDetails(REST_URL, props.address);
+        props.fetchRewards(REST_URL, props.address);
     };
 
     const getValueObject = (type) => {
@@ -192,6 +195,7 @@ DelegateDialog.propTypes = {
     handleClose: PropTypes.func.isRequired,
     lang: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     pendingDialog: PropTypes.func.isRequired,
     showMessage: PropTypes.func.isRequired,

@@ -28,6 +28,7 @@ import ConnectButton from './ConnectButton';
 import CopyButton from '../../components/CopyButton/TextButton';
 import variables from '../../utils/variables';
 import { fetchProposalDetails, fetchProposalTally, fetchVoteDetails, getProposals } from '../../actions/proposals';
+import { Link } from 'react-router-dom/';
 
 class NavBar extends Component {
     constructor (props) {
@@ -43,16 +44,17 @@ class NavBar extends Component {
             this.initKeplr();
         }
         if (!this.props.stake) {
-            this.props.getProposals((result) => {
+            this.props.getProposals(this.props.network.REST_URL, (result) => {
                 if (result && result.length) {
+                    const { REST_URL } = this.props.network;
                     result.map((val) => {
                         const filter = this.props.proposalDetails && Object.keys(this.props.proposalDetails).length &&
                             Object.keys(this.props.proposalDetails).find((key) => key === val.id);
                         if (!filter) {
-                            this.props.fetchProposalDetails(val.id);
+                            this.props.fetchProposalDetails(REST_URL, val.id);
                         }
                         if (val.status === 2) {
-                            this.props.fetchProposalTally(val.id);
+                            this.props.fetchProposalTally(REST_URL, val.id);
                         }
 
                         return null;
@@ -65,11 +67,11 @@ class NavBar extends Component {
         }
 
         if (!this.props.validatorList.length && !this.props.validatorListInProgress) {
-            this.props.getValidators((data) => {
+            this.props.getValidators(this.props.network.REST_URL, (data) => {
                 if (data && data.length && this.props.validatorImages && this.props.validatorImages.length === 0) {
                     data.map((value) => {
-                        if (value && value.description && value.description.identity) {
-                            this.props.fetchValidatorImage(value.description.identity);
+                        if (value && value.operator_address) {
+                            this.props.fetchValidatorImage(value.operator_address);
                         }
 
                         return null;
@@ -85,6 +87,7 @@ class NavBar extends Component {
     }
 
     componentDidUpdate (pp, ps, ss) {
+        const { REST_URL } = this.props.network;
         if ((!pp.proposals.length && (pp.proposals !== this.props.proposals) &&
             this.props.proposals && this.props.proposals.length) ||
             ((pp.address !== this.props.address) && (pp.address === ''))) {
@@ -93,7 +96,7 @@ class NavBar extends Component {
                     this.props.voteDetails.filter((vote) => vote.proposal_id === val.id)[0];
 
                 if (val.status === 2 && !votedOption && this.props.address) {
-                    this.props.fetchVoteDetails(val.id, this.props.address);
+                    this.props.fetchVoteDetails(REST_URL, val.id, this.props.address);
                 }
 
                 return null;
@@ -101,17 +104,18 @@ class NavBar extends Component {
         }
 
         if ((pp.address !== this.props.address) && pp.address !== '' && !this.props.stake) {
-            this.props.getProposals((result) => {
+            this.props.getProposals(REST_URL, (result) => {
                 if (result && result.length) {
+                    const { REST_URL } = this.props.network;
                     result.map((val) => {
                         const filter = this.props.proposalDetails && Object.keys(this.props.proposalDetails).length &&
                             Object.keys(this.props.proposalDetails).find((key) => key === val.id);
                         if (!filter) {
-                            this.props.fetchProposalDetails(val.id);
+                            this.props.fetchProposalDetails(REST_URL, val.id);
                         }
                         if (val.status === 2) {
-                            this.props.fetchProposalTally(val.id);
-                            this.props.fetchVoteDetails(val.id, this.props.address);
+                            this.props.fetchProposalTally(REST_URL, val.id);
+                            this.props.fetchVoteDetails(REST_URL, val.id, this.props.address);
                         }
 
                         return null;
@@ -126,14 +130,15 @@ class NavBar extends Component {
     }
 
     handleFetch (address) {
+        const { REST_URL } = this.props.network;
         if (!this.props.proposalTab) {
-            this.props.getDelegations(address);
-            this.props.getDelegatedValidatorsDetails(address);
+            this.props.getDelegations(REST_URL, address);
+            this.props.getDelegatedValidatorsDetails(REST_URL, address);
         }
-        this.props.getUnBondingDelegations(address);
-        this.props.getBalance(address);
-        this.props.fetchVestingBalance(address);
-        this.props.fetchRewards(address);
+        this.props.getUnBondingDelegations(REST_URL, address);
+        this.props.getBalance(REST_URL, address);
+        this.props.fetchVestingBalance(REST_URL, address);
+        this.props.fetchRewards(REST_URL, address);
     }
 
     initKeplr () {
@@ -141,7 +146,7 @@ class NavBar extends Component {
     }
 
     handleChain () {
-        initializeChain((error, addressList) => {
+        initializeChain(this.props.network.CHAIN_ID, (error, addressList) => {
             if (error) {
                 this.props.showMessage(error);
                 localStorage.removeItem('of_co_address');
@@ -160,16 +165,17 @@ class NavBar extends Component {
     }
 
     render () {
+        const { network, changeNetwork } = this.props;
         return (
             <div className={ClassNames('nav_bar padding', localStorage.getItem('of_co_address') || this.props.address
                 ? '' : 'disconnected_nav')}>
-                <img alt="OmniFlix" src={logo}/>
+                <Link to="/"><img alt="OmniFlix" src={logo}/></Link>
                 <ExpansionButton/>
                 <div className={ClassNames('right_content', this.props.show ? 'show' : '')}>
                     <div className="back_button" onClick={this.props.handleClose}>
                         <Icon className="cross" icon="cross"/>
                     </div>
-                    <Tabs/>
+                    <Tabs changeNetwork={changeNetwork} network={network.NETWORK_TYPE} />
                     {(localStorage.getItem('of_co_address') || this.props.address) &&
                     <div className="select_fields">
                         <p className="token_name">{config.NETWORK_NAME}</p>
@@ -185,7 +191,7 @@ class NavBar extends Component {
                     </div>}
                     {localStorage.getItem('of_co_address') || this.props.address
                         ? <DisconnectButton/>
-                        : <ConnectButton proposalTab={this.props.proposalTab}/>}
+                        : <ConnectButton network={network} proposalTab={this.props.proposalTab}/>}
                 </div>
             </div>
         );
@@ -193,6 +199,7 @@ class NavBar extends Component {
 }
 
 NavBar.propTypes = {
+    changeNetwork: PropTypes.func.isRequired,
     fetchProposalDetails: PropTypes.func.isRequired,
     fetchProposalTally: PropTypes.func.isRequired,
     fetchRewards: PropTypes.func.isRequired,
@@ -210,6 +217,7 @@ NavBar.propTypes = {
         push: PropTypes.func.isRequired,
     }).isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     proposalDetails: PropTypes.object.isRequired,
     proposals: PropTypes.array.isRequired,
     setAccountAddress: PropTypes.func.isRequired,

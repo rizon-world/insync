@@ -1,65 +1,10 @@
-import { REST_URL, RPC_URL } from './constants/url';
 import { SigningStargateClient } from '@cosmjs/stargate';
 import { SigningCosmosClient } from '@cosmjs/launchpad';
 import { makeSignDoc } from '@cosmjs/amino';
-import { config } from './config';
+import { mainnetChainConfig } from './exportConfig';
+import { testnetChainConfig } from './exportTestnetConfig';
 
-const chainId = config.CHAIN_ID;
-const chainName = config.CHAIN_NAME;
-const coinDenom = config.COIN_DENOM;
-const coinMinimalDenom = config.COIN_MINIMAL_DENOM;
-const coinDecimals = config.COIN_DECIMALS;
-const prefix = config.PREFIX;
-const coinGeckoId = config.COINGECKO_ID;
-
-const chainConfig = {
-    chainId: chainId,
-    chainName,
-    rpc: RPC_URL,
-    rest: REST_URL,
-    stakeCurrency: {
-        coinDenom,
-        coinMinimalDenom,
-        coinDecimals,
-        coinGeckoId,
-    },
-    bip44: {
-        coinType: 118,
-    },
-    bech32Config: {
-        bech32PrefixAccAddr: `${prefix}`,
-        bech32PrefixAccPub: `${prefix}pub`,
-        bech32PrefixValAddr: `${prefix}valoper`,
-        bech32PrefixValPub: `${prefix}valoperpub`,
-        bech32PrefixConsAddr: `${prefix}valcons`,
-        bech32PrefixConsPub: `${prefix}valconspub`,
-    },
-    currencies: [
-        {
-            coinDenom,
-            coinMinimalDenom,
-            coinDecimals,
-            coinGeckoId,
-        },
-    ],
-    feeCurrencies: [
-        {
-            coinDenom,
-            coinMinimalDenom,
-            coinDecimals,
-            coinGeckoId,
-        },
-    ],
-    coinType: config.COIN_TYPE,
-    gasPriceStep: {
-        low: config.GAS_PRICE_STEP_LOW,
-        average: config.GAS_PRICE_STEP_AVERAGE,
-        high: config.GAS_PRICE_STEP_HIGH,
-    },
-    features: config.FEATURES,
-};
-
-export const initializeChain = (cb) => {
+export const initializeChain = (chainId, cb) => {
     (async () => {
         if (!window.getOfflineSignerOnlyAmino || !window.keplr) {
             const error = 'Please install keplr extension';
@@ -67,8 +12,12 @@ export const initializeChain = (cb) => {
         } else {
             if (window.keplr.experimentalSuggestChain) {
                 try {
-                    await window.keplr.experimentalSuggestChain(chainConfig);
-                } catch (error) {
+                    if (chainId === 'titan-1') {
+                        await window.keplr.experimentalSuggestChain(mainnetChainConfig);
+                    } else {
+                        await window.keplr.experimentalSuggestChain(testnetChainConfig);
+                    }
+                } catch (_) {
                     const chainError = 'Failed to suggest the chain';
                     cb(chainError);
                 }
@@ -90,12 +39,12 @@ export const initializeChain = (cb) => {
     })();
 };
 
-export const signTxAndBroadcast = (tx, address, cb) => {
+export const signTxAndBroadcast = (chainId, rpcUrl, tx, address, cb) => {
     (async () => {
         await window.keplr && window.keplr.enable(chainId);
         const offlineSigner = window.getOfflineSignerOnlyAmino && window.getOfflineSignerOnlyAmino(chainId);
         const client = await SigningStargateClient.connectWithSigner(
-            RPC_URL,
+            rpcUrl,
             offlineSigner,
         );
         client.signAndBroadcast(
@@ -115,12 +64,12 @@ export const signTxAndBroadcast = (tx, address, cb) => {
     })();
 };
 
-export const cosmosSignTxAndBroadcast = (tx, address, cb) => {
+export const cosmosSignTxAndBroadcast = (chainId, restUrl, tx, address, cb) => {
     (async () => {
         await window.keplr && window.keplr.enable(chainId);
         const offlineSigner = window.getOfflineSignerOnlyAmino && window.getOfflineSignerOnlyAmino(chainId);
         const cosmJS = new SigningCosmosClient(
-            REST_URL,
+            restUrl,
             address,
             offlineSigner,
         );
@@ -137,19 +86,19 @@ export const cosmosSignTxAndBroadcast = (tx, address, cb) => {
     })();
 };
 
-export const aminoSignTxAndBroadcast = (tx, address, cb) => {
+export const aminoSignTxAndBroadcast = (chainId, rpcUrl, restUrl, tx, address, cb) => {
     (async () => {
         await window.keplr && window.keplr.enable(chainId);
         const offlineSigner = window.getOfflineSignerOnlyAmino && window.getOfflineSignerOnlyAmino(chainId);
 
         const client = new SigningCosmosClient(
-            REST_URL,
+            restUrl,
             address,
             offlineSigner,
         );
 
         const client2 = await SigningStargateClient.connectWithSigner(
-            RPC_URL,
+            rpcUrl,
             offlineSigner,
         );
         const account = {};
@@ -202,13 +151,13 @@ export const aminoSignTxAndBroadcast = (tx, address, cb) => {
     })();
 };
 
-export const aminoSignTx = (tx, address, cb) => {
+export const aminoSignTx = (chainId, rpcUrl, tx, address, cb) => {
     (async () => {
         await window.keplr && window.keplr.enable(chainId);
         const offlineSigner = window.getOfflineSignerOnlyAmino && window.getOfflineSignerOnlyAmino(chainId);
 
         const client = await SigningStargateClient.connectWithSigner(
-            RPC_URL,
+            rpcUrl,
             offlineSigner,
         );
 

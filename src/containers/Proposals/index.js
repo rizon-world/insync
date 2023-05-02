@@ -16,6 +16,8 @@ const Proposals = (props) => {
     const [active, setActive] = useState(1);
     const [filter, setFilter] = useState(null);
 
+    const { changeNetwork, network } = props;
+
     const handleChange = (value) => {
         if (active === value) {
             return;
@@ -31,7 +33,7 @@ const Proposals = (props) => {
 
     return (
         <div className="proposals">
-            <NavBar proposalTab={true}/>
+            <NavBar changeNetwork={changeNetwork} network={network} proposalTab={true} />
             {!props.open
                 ? <div className="proposals_content padding">
                     <div className="heading">
@@ -56,10 +58,10 @@ const Proposals = (props) => {
                     {props.proposalsInProgress || props.voteDetailsInProgress
                         ? <div className="cards_content">Loading...</div>
                         : filteredProposals && filteredProposals.length
-                            ? <Cards proposals={filteredProposals}/>
+                            ? <Cards network={network} proposals={filteredProposals}/>
                             : <div className="cards_content">No data found</div>}
                 </div>
-                : <ProposalDialog/>}
+                : <ProposalDialog network={network} />}
             <UnSuccessDialog/>
             <PendingDialog/>
             <SuccessDialog/>
@@ -68,6 +70,7 @@ const Proposals = (props) => {
 };
 
 Proposals.propTypes = {
+    changeNetwork: PropTypes.func.isRequired,
     fetchProposalTally: PropTypes.func.isRequired,
     fetchVoteDetails: PropTypes.func.isRequired,
     getProposals: PropTypes.func.isRequired,
@@ -75,6 +78,7 @@ Proposals.propTypes = {
         push: PropTypes.func.isRequired,
     }).isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     open: PropTypes.bool.isRequired,
     proposals: PropTypes.array.isRequired,
     voteDetails: PropTypes.array.isRequired,

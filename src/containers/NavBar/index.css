@@ -4,7 +4,7 @@
     justify-content: space-between;
 }
 
-.nav_bar > img {
+.nav_bar > a > img {
     width: 140px;
 }
 
@@ -123,6 +123,10 @@ table .disconnect_button {
     font-weight: 600;
     line-height: 130%;
     color: #FFFFFF;
+}
+
+.select {
+    
 }
 
 @keyframes fadeInDown {

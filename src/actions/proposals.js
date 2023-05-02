@@ -47,9 +47,9 @@ const fetchProposalsError = (message) => {
     };
 };
 
-export const getProposals = (cb) => (dispatch) => {
+export const getProposals = (url, cb) => (dispatch) => {
     dispatch(fetchProposalsInProgress());
-    Axios.get(PROPOSALS_LIST_URL, {
+    Axios.get(PROPOSALS_LIST_URL(url), {
         headers: {
             Accept: 'application/json, text/plain, */*',
             // Connection: 'keep-alive',
@@ -91,9 +91,9 @@ const fetchProposalVotesError = (message) => {
     };
 };
 
-export const getProposalVotes = (id) => (dispatch) => {
+export const getProposalVotes = (_url, id) => (dispatch) => {
     dispatch(fetchProposalVotesInProgress());
-    const url = urlFetchProposalVotes(id);
+    const url = urlFetchProposalVotes(_url, id);
 
     Axios.get(url, {
         headers: {
@@ -148,9 +148,9 @@ const fetchVoteDetailsError = (message) => {
     };
 };
 
-export const fetchVoteDetails = (id, address) => (dispatch) => {
+export const fetchVoteDetails = (_url, id, address) => (dispatch) => {
     dispatch(fetchVoteDetailsInProgress());
-    const url = urlFetchVoteDetails(id, address);
+    const url = urlFetchVoteDetails(_url, id, address);
 
     Axios.get(url, {
         headers: {
@@ -193,10 +193,10 @@ const fetchProposalTallyError = (message) => {
     };
 };
 
-export const fetchProposalTally = (id) => (dispatch) => {
+export const fetchProposalTally = (_url, id) => (dispatch) => {
     dispatch(fetchProposalTallyInProgress());
 
-    const url = urlFetchTallyDetails(id);
+    const url = urlFetchTallyDetails(_url, id);
     Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
@@ -238,10 +238,10 @@ const fetchProposalDetailsError = (message) => {
     };
 };
 
-export const fetchProposalDetails = (id) => (dispatch) => {
+export const fetchProposalDetails = (_url, id) => (dispatch) => {
     dispatch(fetchProposalDetailsInProgress());
 
-    const url = urlFetchProposalDetails(id);
+    const url = urlFetchProposalDetails(_url, id);
     Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
