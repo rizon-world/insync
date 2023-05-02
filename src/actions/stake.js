@@ -19,7 +19,7 @@ import {
     VALIDATOR_FETCH_ERROR,
     VALIDATOR_FETCH_IN_PROGRESS,
     VALIDATOR_FETCH_SUCCESS,
-    VALIDATOR_IMAGE_FETCH_ERROR,
+    // VALIDATOR_IMAGE_FETCH_ERROR,
     VALIDATOR_IMAGE_FETCH_IN_PROGRESS,
     VALIDATOR_IMAGE_FETCH_SUCCESS,
     VALIDATOR_SET,
@@ -52,7 +52,6 @@ const fetchValidatorsError = (message) => {
 
 export const getValidators = (url, cb) => (dispatch) => {
     dispatch(fetchValidatorsInProgress());
-    console.log('url: ', url);
     Axios.get(VALIDATORS_LIST_URL(url), {
         headers: {
             Accept: 'application/json, text/plain, */*',
@@ -274,35 +273,30 @@ const fetchValidatorImageSuccess = (value) => {
     };
 };
 
-const fetchValidatorImageError = (message) => {
-    return {
-        type: VALIDATOR_IMAGE_FETCH_ERROR,
-        message,
-    };
+// const fetchValidatorImageError = (message) => {
+//     return {
+//         type: VALIDATOR_IMAGE_FETCH_ERROR,
+//         message,
+//     };
+// };
+
+// Testnet matched address
+const existImageAddress = {
+    rizonvaloper12p7w938nwkhehj7j69zkgtk5j76hdtan7j52m0: 'rizonvaloper1fshqmgvtm0s8t6t9lc4eexs2kaz6lwzy60dwgm', // DELIGHT-testnet
+    rizonvaloper1mtn9ltgucnlavnlagcxs5lq3zda05dzs98t8v8: 'rizonvaloper1u4285azprzlrqpq45azsw7464ymmw4juqww8em', // Active Nodes testnet
 };
 
 export const fetchValidatorImage = (id) => (dispatch) => {
     dispatch(fetchValidatorImageInProgress());
-    const URL = validatorImageURL(id);
-    Axios.get(URL, {
-        headers: {
-            Accept: 'application/json, text/plain, */*',
-            // Connection: 'keep-alive',
-        },
-    })
-        .then((res) => {
-            dispatch(fetchValidatorImageSuccess({
-                ...res.data,
-                _id: id,
-            }));
-        })
-        .catch((error) => {
-            dispatch(fetchValidatorImageError(
-                error.response &&
-                error.response.data &&
-                error.response.data.message
-                    ? error.response.data.message
-                    : 'Failed!',
-            ));
-        });
+    if (existImageAddress[id] !== undefined) {
+        dispatch(fetchValidatorImageSuccess({
+            url: validatorImageURL(existImageAddress[id]),
+            _id: id,
+        }));
+    } else {
+        dispatch(fetchValidatorImageSuccess({
+            url: validatorImageURL(id),
+            _id: id,
+        }));
+    }
 };

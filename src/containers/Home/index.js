@@ -118,7 +118,7 @@ class Home extends Component {
                             {this.props.proposalsInProgress || this.props.voteDetailsInProgress
                                 ? <div className="cards_content">Loading...</div>
                                 : filteredProposals && filteredProposals.length
-                                    ? <Cards home={true} proposals={filteredProposals}/>
+                                    ? <Cards home={true} network={network} proposals={filteredProposals}/>
                                     : <div className="cards_content">{variables[this.props.lang]['no_data_found']}</div>}
                         </div>
                         : <ProposalDialog network={network} />}

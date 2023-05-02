@@ -28,6 +28,7 @@ import ConnectButton from './ConnectButton';
 import CopyButton from '../../components/CopyButton/TextButton';
 import variables from '../../utils/variables';
 import { fetchProposalDetails, fetchProposalTally, fetchVoteDetails, getProposals } from '../../actions/proposals';
+import { Link } from 'react-router-dom/';
 
 class NavBar extends Component {
     constructor (props) {
@@ -69,8 +70,8 @@ class NavBar extends Component {
             this.props.getValidators(this.props.network.REST_URL, (data) => {
                 if (data && data.length && this.props.validatorImages && this.props.validatorImages.length === 0) {
                     data.map((value) => {
-                        if (value && value.description && value.description.identity) {
-                            this.props.fetchValidatorImage(value.description.identity);
+                        if (value && value.operator_address) {
+                            this.props.fetchValidatorImage(value.operator_address);
                         }
 
                         return null;
@@ -103,7 +104,7 @@ class NavBar extends Component {
         }
 
         if ((pp.address !== this.props.address) && pp.address !== '' && !this.props.stake) {
-            this.props.getProposals((result) => {
+            this.props.getProposals(REST_URL, (result) => {
                 if (result && result.length) {
                     const { REST_URL } = this.props.network;
                     result.map((val) => {
@@ -168,7 +169,7 @@ class NavBar extends Component {
         return (
             <div className={ClassNames('nav_bar padding', localStorage.getItem('of_co_address') || this.props.address
                 ? '' : 'disconnected_nav')}>
-                <img alt="OmniFlix" src={logo}/>
+                <Link to="/"><img alt="OmniFlix" src={logo}/></Link>
                 <ExpansionButton/>
                 <div className={ClassNames('right_content', this.props.show ? 'show' : '')}>
                     <div className="back_button" onClick={this.props.handleClose}>

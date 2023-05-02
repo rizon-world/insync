@@ -4,7 +4,7 @@
     justify-content: space-between;
 }
 
-.nav_bar > img {
+.nav_bar > a > img {
     width: 140px;
 }
 

@@ -58,7 +58,7 @@ const Proposals = (props) => {
                     {props.proposalsInProgress || props.voteDetailsInProgress
                         ? <div className="cards_content">Loading...</div>
                         : filteredProposals && filteredProposals.length
-                            ? <Cards proposals={filteredProposals}/>
+                            ? <Cards network={network} proposals={filteredProposals}/>
                             : <div className="cards_content">No data found</div>}
                 </div>
                 : <ProposalDialog network={network} />}

@@ -32,10 +32,17 @@ class ProposalDialog extends Component {
         }
     }
 
+    componentDidUpdate (prevProps) {
+        if (prevProps.network.NETWORK_TYPE !== this.props.network.NETWORK_TYPE) {
+            this.props.handleClose();
+        }
+    }
+
     handleChange () {
-        this.setState({
+        this.setState((prev) => ({
+            ...prev,
             show: !this.state.show,
-        });
+        }));
     }
 
     VoteCalculation (val) {

@@ -19,4 +19,6 @@ export const urlFetchProposalVotes = (rest, id) => `${rest}/gov/proposals/${id}/
 export const urlFetchTallyDetails = (rest, id) => `${rest}/gov/proposals/${id}/tally`;
 export const urlFetchProposalDetails = (rest, id) => `${rest}/txs?message.module=governance&submit_proposal.proposal_id=${id}`;
 
-export const validatorImageURL = (id) => `https://keybase.io/_/api/1.0/user/lookup.json?fields=pictures&key_suffix=${id}`;
+export const validatorImageURL = (address) => {
+    return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/rizon/${address}.png`;
+};

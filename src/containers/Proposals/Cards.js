@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pagination } from '@material-ui/lab';
 import * as PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Icon from '../../components/Icon';
 import ClassNames from 'classnames';
 import { Button } from '@material-ui/core';
-import { showProposalDialog } from '../../actions/proposals';
+import { hideProposalDialog, showProposalDialog } from '../../actions/proposals';
 import moment from 'moment';
 import { tally } from '../../utils/numberFormats';
 
 const Cards = (props) => {
     const [page, setPage] = useState(1);
+    const [isMainnet, setIsMainnet] = useState(props.network.NETWORK_TYPE === 'mainnet');
+    const [reversedItems, setReversedItems] = useState([]);
     let rowsPerPage = 15;
     if (props.home) {
         rowsPerPage = 6;
@@ -22,10 +24,20 @@ const Cards = (props) => {
 
     const count = Math.ceil(props.proposals.length / rowsPerPage);
 
-    const reversedItems = props.proposals.length &&
-        props.proposals.map(function iterateItems (item) {
-            return item;
-        }).reverse();
+    useEffect(() => {
+        setReversedItems(props.proposals.length &&
+            props.proposals.map(function iterateItems (item) {
+                return item;
+            }).reverse());
+    }, [props.proposals]);
+
+    useEffect(() => {
+        setIsMainnet(props.network.NETWORK_TYPE === 'mainnet');
+        props.hideShow();
+    }, [isMainnet]);
+
+    useEffect(() => {
+    }, [props.dialog.open]);
 
     const VoteCalculation = (proposal, val) => {
         if (proposal.status === 2) {
@@ -47,6 +59,7 @@ const Cards = (props) => {
                 ? tally(proposal.final_tally_result[val], sum) : '0%');
         }
     };
+
 
     return (
         <div className="cards_content">
@@ -191,11 +204,14 @@ const Cards = (props) => {
 
 Cards.propTypes = {
     handleShow: PropTypes.func.isRequired,
+    hideShow: PropTypes.func.isRequired,
     proposalDetails: PropTypes.object.isRequired,
     tallyDetails: PropTypes.object.isRequired,
     voteDetails: PropTypes.array.isRequired,
     cards: PropTypes.array,
+    dialog: PropTypes.object,
     home: PropTypes.bool,
+    network: PropTypes.object,
     proposals: PropTypes.array,
     proposalsInProgress: PropTypes.bool,
 };
@@ -206,11 +222,13 @@ const stateToProps = (state) => {
         proposalsInProgress: state.proposals._.inProgress,
         voteDetails: state.proposals.voteDetails.value,
         tallyDetails: state.proposals.tallyDetails.value,
+        dialog: state.proposals.dialog,
     };
 };
 
 const actionToProps = {
     handleShow: showProposalDialog,
+    hideShow: hideProposalDialog,
 };
 
 export default connect(stateToProps, actionToProps)(Cards);
