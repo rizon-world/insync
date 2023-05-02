@@ -35,8 +35,8 @@ yarn
 
 ```js
 export const config = {
-    RPC_URL: 'https://rpcapi.rizon.world/',
-    REST_URL: 'https://restapi.rizon.world/',
+    RPC_URL: 'http://seed-1.mainnet.rizon.world:26657',
+    REST_URL: 'http://seed-1.mainnet.rizon.world:1317',
     EXPLORER_URL: 'https://www.mintscan.io/rizon',
     NETWORK_NAME: 'RIZON',
     NETWORK_TYPE: 'mainnet',
