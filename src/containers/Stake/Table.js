@@ -31,7 +31,7 @@ class Table extends Component {
                     noMatch: this.props.inProgress
                         ? <CircularProgress/>
                         : !this.props.address
-                            ? <ConnectButton/>
+                            ? <ConnectButton network={this.props.network}/>
                             : <div className="no_data_table"> No data found </div>,
                     toolTip: 'Sort',
                 },
@@ -164,6 +164,7 @@ Table.propTypes = {
     active: PropTypes.number.isRequired,
     inProgress: PropTypes.bool.isRequired,
     lang: PropTypes.string.isRequired,
+    network: PropTypes.object.isRequired,
     address: PropTypes.string,
     delegatedValidatorList: PropTypes.arrayOf(
         PropTypes.shape({

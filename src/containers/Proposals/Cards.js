@@ -60,7 +60,6 @@ const Cards = (props) => {
         }
     };
 
-
     return (
         <div className="cards_content">
             <div className="cards">

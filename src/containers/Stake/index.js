@@ -38,7 +38,7 @@ const Stake = (props) => {
                         </p>
                     </div>
                 </div>
-                <Table active={active}/>
+                <Table active={active} network={network}/>
             </div>
             <DelegateDialog changeNetwork={changeNetwork} network={network} />
             <SuccessDialog/>

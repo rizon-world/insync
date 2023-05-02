@@ -9,8 +9,9 @@ import { config as mainnet } from './config';
 import { config as testnet } from './testConfig';
 import { connect } from 'react-redux';
 import { fetchValidatorImage, getValidators } from './actions/stake';
-import { fetchProposalDetails, fetchProposalTally, fetchVoteDetails, getProposals } from './actions/proposals';
+import { fetchProposalDetails, fetchProposalTally, getProposals } from './actions/proposals';
 import proposals from './reducers/proposals';
+import { disconnectSet } from './actions/accounts';
 
 const Router = (props) => {
     const [network, setNetwork] = useState(mainnet);
@@ -46,7 +47,8 @@ const Router = (props) => {
                 });
             }
         });
-        props.fetchVoteDetails(newState.REST_URL, props.dialog.id, props.address);
+        localStorage.removeItem('of_co_address');
+        props.disconnectSet();
     };
 
     return (
@@ -79,10 +81,10 @@ const Router = (props) => {
 };
 
 Router.propTypes = {
+    disconnectSet: PropTypes.func.isRequired,
     fetchProposalDetails: PropTypes.func.isRequired,
     fetchProposalTally: PropTypes.func.isRequired,
     fetchValidatorImage: PropTypes.func.isRequired,
-    fetchVoteDetails: PropTypes.func.isRequired,
     getProposals: PropTypes.func.isRequired,
     getValidators: PropTypes.func.isRequired,
     address: PropTypes.string,
@@ -98,12 +100,12 @@ const stateToProps = (state) => {
 };
 
 const actionToProps = {
-    fetchVoteDetails,
     getValidators,
     fetchValidatorImage,
     fetchProposalDetails,
     fetchProposalTally,
     getProposals,
+    disconnectSet,
 };
 
 export default connect(stateToProps, actionToProps)(Router);

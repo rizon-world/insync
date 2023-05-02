@@ -15,6 +15,10 @@ import ProposalDialog from '../Proposals/ProposalDialog';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import PendingDialog from '../Stake/DelegateDialog/PendingDialog';
+import { fetchRewards, getBalance, fetchVestingBalance, getUnBondingDelegations, getDelegations } from '../../actions/accounts';
+import { sleep } from '../../utils/sleep';
+
+import { TbRefresh } from 'react-icons/tb';
 
 class Home extends Component {
     constructor (props) {
@@ -22,6 +26,7 @@ class Home extends Component {
 
         this.state = {
             active: 1,
+            isLoading: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -30,24 +35,18 @@ class Home extends Component {
 
     componentDidMount () {
         if ((this.props.address !== '') && (this.state.active !== 2)) {
-            this.setState({
-                active: 2,
-            });
+            this.setState((p) => ({ ...p, active: 2 }));
         }
     }
 
     componentDidUpdate (pp, ps, ss) {
         if ((pp.address !== this.props.address) &&
             (this.props.address !== '') && (this.state.active !== 2)) {
-            this.setState({
-                active: 2,
-            });
+            this.setState((p) => ({ ...p, active: 2 }));
         }
         if ((pp.address !== this.props.address) &&
             (this.props.address === '') && (this.state.active !== 1)) {
-            this.setState({
-                active: 1,
-            });
+            this.setState((p) => ({ ...p, active: 1 }));
         }
     }
 
@@ -56,9 +55,7 @@ class Home extends Component {
             return;
         }
 
-        this.setState({
-            active: value,
-        });
+        this.setState((p) => ({ ...p, active: value }));
     }
 
     handleRedirect (value) {
@@ -76,11 +73,29 @@ class Home extends Component {
                 <NavBar changeNetwork={changeNetwork} network={network} />
                 <div className="home padding">
                     <div className="card">
+                        {this.props.address !== '' &&
+                        <Button
+                            style={{ maxWidth: '30px', position: 'absolute', top: '10px', right: '10px', backgroundColor: `${this.state.isLoading ? '#ffffffc9' : 'white'}`, borderRadius: '50%' }}
+                            onClick={() => {
+                                if (this.state.isLoading === false) {
+                                    this.setState((p) => ({ ...p, isLoading: true }));
+                                    Promise.all([
+                                        this.props.fetchRewards(this.props.network.REST_URL, this.props.address),
+                                        this.props.getBalance(this.props.network.REST_URL, this.props.address),
+                                        this.props.fetchVestingBalance(this.props.network.REST_URL, this.props.address),
+                                        this.props.getUnBondingDelegations(this.props.network.REST_URL, this.props.address),
+                                        this.props.getDelegations(this.props.network.REST_URL, this.props.address),
+                                        sleep(2000),
+                                    ]).then(() => this.setState((p) => ({ ...p, isLoading: false })));
+                                }
+                            }}>
+                            <TbRefresh className={this.state.isLoading ? 'rotate' : ''}/>
+                        </Button>}
                         <div className="left_content">
                             <h2>{variables[this.props.lang].welcome}</h2>
                             <p className="info">{variables[this.props.lang].participate}</p>
                         </div>
-                        <TokenDetails lang={this.props.lang}/>
+                        <TokenDetails lang={this.props.lang} network={network}/>
                     </div>
                 </div>
                 <div className="stake">
@@ -99,7 +114,7 @@ class Home extends Component {
                                 {variables[this.props.lang]['view_all']}
                             </Button>
                         </div>
-                        <Table active={active} home={true} />
+                        <Table active={active} home={true} network={network}/>
                     </div>
                 </div>
                 <div className="proposals">
@@ -135,6 +150,11 @@ class Home extends Component {
 
 Home.propTypes = {
     changeNetwork: PropTypes.func.isRequired,
+    fetchRewards: PropTypes.func.isRequired,
+    fetchVestingBalance: PropTypes.func.isRequired,
+    getBalance: PropTypes.func.isRequired,
+    getDelegations: PropTypes.func.isRequired,
+    getUnBondingDelegations: PropTypes.func.isRequired,
     history: PropTypes.shape({
         push: PropTypes.func.isRequired,
     }).isRequired,
@@ -158,4 +178,12 @@ const stateToProps = (state) => {
     };
 };
 
-export default withRouter(connect(stateToProps)(Home));
+const actionToProps = {
+    fetchRewards,
+    getBalance,
+    fetchVestingBalance,
+    getUnBondingDelegations,
+    getDelegations,
+};
+
+export default withRouter(connect(stateToProps, actionToProps)(Home));

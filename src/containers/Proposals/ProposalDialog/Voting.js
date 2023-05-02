@@ -63,7 +63,7 @@ const Voting = (props) => {
             memo: '',
         };
 
-        signTxAndBroadcast(tx, props.address, (error, result) => {
+        signTxAndBroadcast(props.network.CHAIN_ID, props.network.RPC_URL, tx, props.address, (error, result) => {
             setInProgress(false);
             if (error) {
                 if (error.indexOf('not yet found on the chain') > -1) {
@@ -78,8 +78,8 @@ const Voting = (props) => {
                 props.successDialog(result.transactionHash);
                 props.fetchVoteDetails(REST_URL, props.proposalId, props.address);
                 props.fetchProposalTally(REST_URL, props.proposalId);
-                props.getBalance(props.address);
-                props.fetchVestingBalance(props.address);
+                props.getBalance(REST_URL, props.address);
+                props.fetchVestingBalance(REST_URL, props.address);
             }
         });
     };

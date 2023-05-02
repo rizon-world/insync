@@ -59,7 +59,7 @@ const fetchDelegationsError = (message) => {
 export const getDelegations = (_url, address) => (dispatch) => {
     dispatch(fetchDelegationsInProgress());
     const url = urlFetchDelegations(_url, address);
-    Axios.get(url, {
+    return Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
             // Connection: 'keep-alive',
@@ -102,7 +102,7 @@ const fetchBalanceError = (message) => {
 export const getBalance = (_url, address) => (dispatch) => {
     dispatch(fetchBalanceInProgress());
     const url = urlFetchBalance(_url, address);
-    Axios.get(url, {
+    return Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
             // Connection: 'keep-alive',
@@ -200,7 +200,7 @@ const fetchUnBondingDelegationsError = (message) => {
 export const getUnBondingDelegations = (_url, address) => (dispatch) => {
     dispatch(fetchUnBondingDelegationsInProgress());
     const url = urlFetchUnBondingDelegations(_url, address);
-    Axios.get(url, {
+    return Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
             // Connection: 'keep-alive',
@@ -250,7 +250,7 @@ const fetchRewardsError = (message) => {
 export const fetchRewards = (_url, address) => (dispatch) => {
     dispatch(fetchRewardsInProgress());
     const url = urlFetchRewards(_url, address);
-    Axios.get(url, {
+    return Axios.get(url, {
         headers: {
             Accept: 'application/json, text/plain, */*',
             // Connection: 'keep-alive',

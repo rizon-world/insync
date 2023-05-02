@@ -22,14 +22,15 @@ import {
     getUnBondingDelegations,
 } from '../../../actions/accounts';
 import { showMessage } from '../../../actions/snackbar';
-import { config } from '../../../config';
 import CircularProgress from '../../../components/CircularProgress';
 import { connect } from 'react-redux';
 
 const COIN_DECI_VALUE = 1000000;
 const DelegateDialog = (props) => {
+    const config = props.network;
     const [inProgress, setInProgress] = useState(false);
     const { REST_URL } = props.network;
+
     const handleDelegateType = () => {
         setInProgress(true);
         let gasValue = config.DEFAULT_GAS;
@@ -54,7 +55,8 @@ const DelegateDialog = (props) => {
             },
             memo: '',
         };
-        signTxAndBroadcast(updatedTx, props.address, (error, result) => {
+
+        signTxAndBroadcast(props.network.CHAIN_ID, props.network.RPC_URL, updatedTx, props.address, (error, result) => {
             setInProgress(false);
             if (error) {
                 if (error.indexOf('not yet found on the chain') > -1) {

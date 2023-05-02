@@ -146,7 +146,7 @@ class NavBar extends Component {
     }
 
     handleChain () {
-        initializeChain((error, addressList) => {
+        initializeChain(this.props.network.CHAIN_ID, (error, addressList) => {
             if (error) {
                 this.props.showMessage(error);
                 localStorage.removeItem('of_co_address');
@@ -191,7 +191,7 @@ class NavBar extends Component {
                     </div>}
                     {localStorage.getItem('of_co_address') || this.props.address
                         ? <DisconnectButton/>
-                        : <ConnectButton proposalTab={this.props.proposalTab}/>}
+                        : <ConnectButton network={network} proposalTab={this.props.proposalTab}/>}
                 </div>
             </div>
         );

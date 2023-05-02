@@ -91,9 +91,9 @@ const fetchProposalVotesError = (message) => {
     };
 };
 
-export const getProposalVotes = (id) => (dispatch) => {
+export const getProposalVotes = (_url, id) => (dispatch) => {
     dispatch(fetchProposalVotesInProgress());
-    const url = urlFetchProposalVotes(id);
+    const url = urlFetchProposalVotes(_url, id);
 
     Axios.get(url, {
         headers: {
