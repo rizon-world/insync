@@ -9,7 +9,7 @@ import SuccessDialog from '../Stake/DelegateDialog/SuccessDialog';
 import UnSuccessDialog from '../Stake/DelegateDialog/UnSuccessDialog';
 import ClaimDialog from './ClaimDialog';
 import Table from '../Stake/Table';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
 import Cards from '../Proposals/Cards';
 import ProposalDialog from '../Proposals/ProposalDialog';
 import { withRouter } from 'react-router';
@@ -74,23 +74,24 @@ class Home extends Component {
                 <div className="home padding">
                     <div className="card">
                         {this.props.address !== '' &&
-                        <Button
-                            style={{ maxWidth: '30px', position: 'absolute', top: '10px', right: '10px', backgroundColor: `${this.state.isLoading ? '#ffffffc9' : 'white'}`, borderRadius: '50%' }}
+                        <IconButton aria-label="delete" size="large"
+                        style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: `${this.state.isLoading ? '' : 'white'}`, color: `${this.state.isLoading ? 'white' : 'black'}`, transition: 'all 0.5s ease-in-out' }}
                             onClick={() => {
-                                if (this.state.isLoading === false) {
-                                    this.setState((p) => ({ ...p, isLoading: true }));
-                                    Promise.all([
-                                        this.props.fetchRewards(this.props.network.REST_URL, this.props.address),
-                                        this.props.getBalance(this.props.network.REST_URL, this.props.address),
-                                        this.props.fetchVestingBalance(this.props.network.REST_URL, this.props.address),
-                                        this.props.getUnBondingDelegations(this.props.network.REST_URL, this.props.address),
-                                        this.props.getDelegations(this.props.network.REST_URL, this.props.address),
-                                        sleep(2000),
-                                    ]).then(() => this.setState((p) => ({ ...p, isLoading: false })));
-                                }
-                            }}>
-                            <TbRefresh className={this.state.isLoading ? 'rotate' : ''}/>
-                        </Button>}
+                            if (this.state.isLoading === false) {
+                                this.setState((p) => ({ ...p, isLoading: true }));
+                                Promise.all([
+                                    this.props.fetchRewards(this.props.network.REST_URL, this.props.address),
+                                    this.props.getBalance(this.props.network.REST_URL, this.props.address),
+                                    this.props.fetchVestingBalance(this.props.network.REST_URL, this.props.address),
+                                    this.props.getUnBondingDelegations(this.props.network.REST_URL, this.props.address),
+                                    this.props.getDelegations(this.props.network.REST_URL, this.props.address),
+                                    sleep(2000),
+                                ]).then(() => this.setState((p) => ({ ...p, isLoading: false })));
+                            }
+                        }}>
+                            <TbRefresh fontSize="inherit" className={this.state.isLoading ? 'rotate' : ''}/>
+                        </IconButton>}
+                        
                         <div className="left_content">
                             <h2>{variables[this.props.lang].welcome}</h2>
                             <p className="info">{variables[this.props.lang].participate}</p>
